@@ -8,125 +8,127 @@ const User = require("../models/user");
 const api = supertest(app);
 
 describe("when there is initially one user in db", () => {
-  beforeEach(async () => {
-    await User.deleteMany({});
+    beforeEach(async () => {
+        await User.deleteMany({});
 
-    await api
-      .post("/api/users")
-      .set("Content-Type", "application/json")
-      .send(helper.Fyscher)
-      .expect(201);
+        await api
+            .post("/api/users")
+            .set("Content-Type", "application/json")
+            .send(helper.Fyscher)
+            .expect(201);
 
-    const loggedInFyscher = await api
-      .post("/api/login")
-      .set("Content-Type", "application/json")
-      .send({
-        username: helper.Fyscher.username,
-        password: helper.Fyscher.password,
-      })
-      .expect(200);
+        const loggedInFyscher = await api
+            .post("/api/login")
+            .set("Content-Type", "application/json")
+            .send({
+                username: helper.Fyscher.username,
+                password: helper.Fyscher.password,
+            })
+            .expect(200);
 
-    const fyscher = loggedInFyscher.request.response._body;
+        const fyscher = loggedInFyscher.request.response._body;
 
-    const newBlog1 = {
-      title: "HTML is easy",
-      author: "FB Red",
-      url: "www.com",
-      likes: 6969,
-    };
+        const newBlog1 = {
+            title: "HTML is easy",
+            author: "FB Red",
+            url: "www.com",
+            likes: 6969,
+        };
 
-    await api
-      .post("/api/blogs")
-      .set("Content-Type", "application/json")
-      .set("Authorization", `Bearer ${fyscher.token}`)
-      .send(newBlog1)
-      .expect(201);
-  });
+        await api
+            .post("/api/blogs")
+            .set("Content-Type", "application/json")
+            .set("Authorization", `Bearer ${fyscher.token}`)
+            .send(newBlog1)
+            .expect(201);
+    });
 
-  test("creation succeeds with a fresh username", async () => {
-    const usersAtStart = await helper.usersInDb();
+    test("creation succeeds with a fresh username", async () => {
+        const usersAtStart = await helper.usersInDb();
 
-    const sentUser = await api
-      .post("/api/users")
-      .set("Content-Type", "application/json")
-      .send(helper.Fyschman)
-      .expect("Content-Type", /application\/json/)
-      .expect(201);
+        const sentUser = await api
+            .post("/api/users")
+            .set("Content-Type", "application/json")
+            .send(helper.Fyschman)
+            .expect("Content-Type", /application\/json/)
+            .expect(201);
 
-    const returnedUser = await User.findById(sentUser._body.id).populate(
-      "blogs",
-      { title: 1, author: 1, url: 1, likes: 1 },
-    );
-    const savedUser = returnedUser.toJSON();
+        const returnedUser = await User.findById(sentUser._body.id).populate(
+            "blogs",
+            { title: 1, author: 1, url: 1, likes: 1 },
+        );
+        const savedUser = returnedUser.toJSON();
 
-    const newTotalUsers = [...usersAtStart, savedUser];
+        const newTotalUsers = [...usersAtStart, savedUser];
 
-    const usersAtEnd = await helper.usersInDb();
+        const usersAtEnd = await helper.usersInDb();
 
-    assert.deepStrictEqual(usersAtEnd, newTotalUsers);
-  });
+        assert.deepStrictEqual(usersAtEnd, newTotalUsers);
+    });
 
-  test("creation fails with proper statuscode and message if username already taken", async () => {
-    const usersAtStart = await helper.usersInDb();
+    test("creation fails with proper statuscode and message if username already taken", async () => {
+        const usersAtStart = await helper.usersInDb();
 
-    const result = await api
-      .post("/api/users")
-      .set("Content-Type", "application/json")
-      .send(helper.Fyscher)
-      .expect(400);
+        const result = await api
+            .post("/api/users")
+            .set("Content-Type", "application/json")
+            .send(helper.Fyscher)
+            .expect(400);
 
-    const usersAtEnd = await helper.usersInDb();
+        const usersAtEnd = await helper.usersInDb();
 
-    assert(result.body.error.includes("E11000 duplicate key error collection"));
+        assert(
+            result.body.error.includes("E11000 duplicate key error collection"),
+        );
 
-    assert.deepStrictEqual(usersAtStart, usersAtEnd);
-  });
+        assert.deepStrictEqual(usersAtStart, usersAtEnd);
+    });
 
-  test("creation fails if username received is below the minimum character length", async () => {
-    const usersAtStart = await helper.usersInDb();
+    test("creation fails if username received is below the minimum character length", async () => {
+        const usersAtStart = await helper.usersInDb();
 
-    const newUser = {
-      username: "R",
-      name: "oot",
-      password: "foooookenell",
-    };
+        const newUser = {
+            username: "R",
+            name: "oot",
+            password: "foooookenell",
+        };
 
-    const result = await api
-      .post("/api/users")
-      .send(newUser)
-      .expect(400)
-      .expect("Content-Type", /application\/json/);
+        const result = await api
+            .post("/api/users")
+            .send(newUser)
+            .expect(400)
+            .expect("Content-Type", /application\/json/);
 
-    const usersAtEnd = await helper.usersInDb();
+        const usersAtEnd = await helper.usersInDb();
 
-    assert(
-      result.body.error.includes(
-        "User validation failed: username: Path `username`",
-      ),
-    );
-    assert.deepStrictEqual(usersAtEnd, usersAtStart);
-  });
+        assert(
+            result.body.error.includes(
+                "User validation failed: username: Path `username`",
+            ),
+        );
+        assert.deepStrictEqual(usersAtEnd, usersAtStart);
+    });
 
-  test("creation fails if password received is below the minimum character length", async () => {
-    const usersAtStart = await helper.usersInDb();
+    test("creation fails if password received is below the minimum character length", async () => {
+        const usersAtStart = await helper.usersInDb();
 
-    const newUser = {
-      username: "Root",
-      name: "oot",
-      password: "f",
-    };
+        const newUser = {
+            username: "Root",
+            name: "oot",
+            password: "f",
+        };
 
-    const result = await api
-      .post("/api/users")
-      .send(newUser)
-      .expect(400)
-      .expect("Content-Type", /application\/json/);
+        const result = await api
+            .post("/api/users")
+            .send(newUser)
+            .expect(400)
+            .expect("Content-Type", /application\/json/);
 
-    const usersAtEnd = await helper.usersInDb();
+        const usersAtEnd = await helper.usersInDb();
 
-    assert(result.body.error.includes("Password too short"));
-    assert.deepStrictEqual(usersAtEnd, usersAtStart);
-  });
+        assert(result.body.error.includes("Password too short"));
+        assert.deepStrictEqual(usersAtEnd, usersAtStart);
+    });
 });
 
 after(async () => await mongoose.connection.close());

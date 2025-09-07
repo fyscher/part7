@@ -20,13 +20,13 @@ app.use("/api/login", loginRouter);
 logger.info("Connecting to MongoDB: ", config.MONGODB_URI);
 mongoose.set("strictQuery", false);
 mongoose
-  .connect(config.MONGODB_URI)
-  .then(() => {
-    logger.info("MongoDB connection successful");
-  })
-  .catch((error) => {
-    logger.error("Connection Error: ", error.message);
-  });
+    .connect(config.MONGODB_URI)
+    .then(() => {
+        logger.info("MongoDB connection successful");
+    })
+    .catch((error) => {
+        logger.error("Connection Error: ", error.message);
+    });
 
 app.use(middleware.errorHandler);
 
