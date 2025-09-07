@@ -1,7 +1,9 @@
 import Blog from "./Blog";
 import DelBlog from "./DelBlog";
+import { useSelector } from "react-redux";
 
-const Blogs = ({ blogs }) => {
+const Blogs = () => {
+  const blogs = useSelector(({ blogs }) => blogs);
   return (
     <div>
       <h2>blogs</h2>
