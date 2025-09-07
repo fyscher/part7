@@ -1,4 +1,7 @@
 import { useState } from "react";
+import { notify } from "../reducers/notificationReducer";
+import { createBlog } from "../reducers/blogReducer";
+import { useDispatch } from "react-redux";
 
 const AddBlog = () => {
     const [newTitle, setNewTitle] = useState("");
@@ -9,6 +12,8 @@ const AddBlog = () => {
     const handleAuthorChange = (e) => setNewAuthor(e.target.value);
     const handleURLChange = (e) => setNewURL(e.target.value);
 
+    const dispatch = useDispatch();
+
     const newObject = {
         title: newTitle,
         author: newAuthor,
@@ -18,16 +23,14 @@ const AddBlog = () => {
     const handleAddBlog = async (e) => {
         e.preventDefault();
         try {
-            const res = await blogService.create(newObject);
-            setBlogs(blogs.concat(res));
-            notify("error", `${newTitle} has been added!`);
+            dispatch(createBlog(newObject));
+            dispatch(notify(`${newTitle} has been added!`));
             setNewTitle("");
             setNewAuthor("");
             setNewURL("");
         } catch (exception) {
             console.log(exception);
-            setErrorMessage("Cannot Add Blog");
-            setTimeout(() => setErrorMessage(null), 5000);
+            notify("Cannot Add Blog");
         }
     };
 
