@@ -1,9 +1,17 @@
+import { useEffect } from "react";
 import Blog from "./Blog";
 import DelBlog from "./DelBlog";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { initializeBlogs } from "../reducers/blogReducer";
 
 const Blogs = () => {
     const blogs = useSelector(({ blogs }) => blogs);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(initializeBlogs());
+    }, []);
+
     return (
         <div>
             <h2>blogs</h2>
