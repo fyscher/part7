@@ -92,19 +92,10 @@ blogsRouter.put("/:id", middleware.userExtractor, async (request, response) => {
         likes: 1,
     });
     const userJSON = user.toJSON();
-
-    const blog = await Blog.findById(request.params.id).populate("user", {
-        username: 1,
-        name: 1,
-    });
-    const blogJSON = blog.toJSON();
-
-    if (userJSON.id === blogJSON.user.id) {
+    console.log("userJSON: ", userJSON);
+    if (userJSON) {
         const updated = await Blog.findByIdAndUpdate(request.params.id, {
-            title: body.title,
-            author: body.author,
-            url: body.url,
-            likes: body.likes,
+            ...body,
         });
         response.status(204).json(updated);
     }

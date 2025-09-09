@@ -30,7 +30,7 @@ const AddBlog = () => {
             setNewURL("");
         } catch (exception) {
             console.log(exception);
-            notify("Cannot Add Blog");
+            dispatch(notify("Cannot Add Blog"));
         }
     };
 

@@ -13,6 +13,7 @@ const DelBlog = ({ id }) => {
             dispatch(notify("Blog Deleted!"));
         } catch (exception) {
             console.log(exception);
+            dispatch(notify("Blog cannot be deleted!"));
         }
     };
     return (

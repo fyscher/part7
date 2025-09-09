@@ -16,7 +16,6 @@ const blogSlice = createSlice({
             return action.payload;
         },
         removeBlog(state, action) {
-            console.log("payload: ", action.payload);
             const id = action.payload;
             return state.filter((m) => m.id !== id);
         },
@@ -33,8 +32,8 @@ export const likeBlog = (id) => {
             ...object,
             likes: object.likes + 1,
         };
-        const newObject = await blogService.update(id, changedLike);
-        dispatch(updateBlog(newObject));
+        await blogService.update(id, changedLike);
+        dispatch(updateBlog(changedLike));
     };
 };
 
