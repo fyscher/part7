@@ -1,8 +1,7 @@
 import { useState } from "react";
-import { login } from "../services/login";
-import { setToken } from "../services/blogs";
 import { useDispatch } from "react-redux";
 import { notify } from "../reducers/notificationReducer";
+import { sendLogIn } from "../reducers/loginReducer";
 
 const Login = () => {
     const [username, setUsername] = useState("");
@@ -17,17 +16,11 @@ const Login = () => {
         e.preventDefault();
 
         try {
-            const user = await login({
-                username,
-                password,
-            });
-
-            window.localStorage.setItem("loggedBlogUser", JSON.stringify(user));
-            setToken(user.token);
+            dispatch(sendLogIn({ username, password }));
             setUsername("");
             setPassword("");
-            location.reload();
         } catch (exception) {
+            console.log("login error: ", exception);
             dispatch(notify("Wrong Credentials"));
         }
     };
