@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { initializeBlogs } from "../reducers/blogReducer";
-import Blog from "./Blog";
+import { Link } from "react-router-dom";
 import DelBlog from "./DelBlog";
 
 const Blogs = () => {
@@ -17,7 +17,9 @@ const Blogs = () => {
             <h2>blogs</h2>
             {blogs.map((blog) => (
                 <div key={`D_${blog.id}`}>
-                    <Blog blog={blog} id={blog.id} />
+                    <Link to={`/blogs/${blog.id}`}>
+                        <p>{blog.title}</p>
+                    </Link>
                     <DelBlog id={blog.id} />
                 </div>
             ))}

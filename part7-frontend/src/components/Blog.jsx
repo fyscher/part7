@@ -18,11 +18,12 @@ const Blog = ({ blog }) => {
     return (
         <>
             <div id={blog.id}>
-                <p>Title: {blog.title}</p>
-                <p>Author: {blog.author}</p>
-                <p>Likes: {blog.likes}</p>
+                <h2>{blog.title}</h2>
+                <a href={blog.url}>{blog.url}</a>
+                <p>{blog.likes} likes</p>
+                <button onClick={handleLike}>Like</button>
+                <p>added by {blog.user.username}</p>
             </div>
-            <button onClick={handleLike}>Like</button>
         </>
     );
 };
