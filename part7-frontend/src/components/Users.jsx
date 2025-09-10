@@ -13,12 +13,16 @@ const Users = () => {
     return (
         <div>
             <h2>Users</h2>
-            <table striped>
+            <table striped="true">
                 <thead>
-                    <td></td>
-                    <td>
-                        <strong>blogs created</strong>
-                    </td>
+                    <tr>
+                        <td>
+                            <strong>Users</strong>
+                        </td>
+                        <td>
+                            <strong>Blogs Created</strong>
+                        </td>
+                    </tr>
                 </thead>
                 <tbody>
                     {users

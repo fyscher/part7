@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { notify } from "../reducers/notificationReducer";
 import { sendLogIn } from "../reducers/loginReducer";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
     const [username, setUsername] = useState("");
@@ -11,6 +12,7 @@ const Login = () => {
     const handlePasswordChange = (e) => setPassword(e.target.value);
 
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -19,6 +21,7 @@ const Login = () => {
             dispatch(sendLogIn({ username, password }));
             setUsername("");
             setPassword("");
+            navigate("/");
         } catch (exception) {
             console.log("login error: ", exception);
             dispatch(notify("Wrong Credentials"));
