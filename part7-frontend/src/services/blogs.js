@@ -9,6 +9,11 @@ const getAll = async () => {
     return res.data;
 };
 
+const getComments = async (id) => {
+    const res = await axios.get(`${baseUrl}/${id}/comments`);
+    return res.data;
+};
+
 const getById = async (id) => {
     const res = await axios.get(`${baseUrl}/${id}`);
     return res.data;
@@ -40,4 +45,4 @@ const remove = async (id) => {
     return res.data;
 };
 
-export default { getAll, create, update, remove, getById };
+export default { getAll, getComments, create, update, remove, getById };

@@ -1,6 +1,7 @@
 const blogsRouter = require("express").Router();
 const Blog = require("../models/blog");
 const User = require("../models/user");
+const Comment = require("../models/comment");
 const logger = require("../utils/logger");
 const jwt = require("jsonwebtoken");
 const middleware = require("../middleware");
@@ -14,11 +15,24 @@ blogsRouter.get("/", async (request, response) => {
 });
 
 blogsRouter.get(`/:id`, async (request, response) => {
-    const blog = await Blog.findById(request.params.id);
+    const blog = await Blog.findById(request.params.id).populate("comments", {
+        content: 1,
+    });
     if (blog) {
         response.json(blog);
     } else {
         response.status(404).end();
+    }
+});
+
+blogsRouter.get("/:id/comments", async (req, res) => {
+    const blog = await Blog.findById(req.params.id).populate("comments", {
+        content: 1,
+    });
+    if (blog) {
+        res.status(200).json(blog.comments);
+    } else {
+        res.status(404).end();
     }
 });
 
@@ -47,14 +61,44 @@ blogsRouter.post("/", middleware.userExtractor, async (request, response) => {
         url: body.url,
         likes: body.likes ? body.likes : 0,
         user: user.id,
+        comments: body.comments,
     });
-
+    console.log("blog: ", blog);
     const savedBlog = await blog.save();
     user.blogs = user.blogs.concat(savedBlog._id);
     await user.save();
 
     response.status(201).json(savedBlog);
 });
+
+blogsRouter.post(
+    "/:id/comments",
+    middleware.userExtractor,
+    async (req, res) => {
+        const body = req.body;
+        const blog = await Blog.findById(req.params.id).populate("comments", {
+            content: 1,
+        });
+
+        console.log("body", body);
+        console.log("blog: ", blog);
+
+        const decodedToken = jwt.verify(req.token, process.env.SECRET);
+        if (!decodedToken.id) {
+            res.status(401).json({ error: "token invalid" });
+        }
+
+        const comment = new Comment({
+            content: body.content,
+        });
+        const savedComment = await comment.save();
+        console.log("savedComment: ", savedComment);
+        blog.comments = blog.comments.concat(savedComment._id);
+        await blog.save();
+
+        res.status(201).json(savedComment);
+    },
+);
 
 blogsRouter.delete(
     "/:id",

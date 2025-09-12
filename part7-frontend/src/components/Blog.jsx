@@ -1,9 +1,11 @@
 import { useDispatch } from "react-redux";
 import { likeBlog } from "../reducers/blogReducer";
 import { notify } from "../reducers/notificationReducer";
+import Comments from "./Comments";
 
 const Blog = ({ blog }) => {
     const dispatch = useDispatch();
+
     const handleLike = (e) => {
         e.preventDefault();
         try {
@@ -18,12 +20,13 @@ const Blog = ({ blog }) => {
     return (
         <>
             <div id={blog.id}>
-                <h2>{blog.title}</h2>
+                <h1>{blog.title}</h1>
                 <a href={blog.url}>{blog.url}</a>
                 <p>{blog.likes} likes</p>
                 <button onClick={handleLike}>Like</button>
                 <p>added by {blog.user.username}</p>
             </div>
+            <Comments id={blog.id} />
         </>
     );
 };

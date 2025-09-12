@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 const User = ({ user }) => {
     return (
         <div>
@@ -7,7 +9,11 @@ const User = ({ user }) => {
             </p>
             <ul>
                 {user.blogs.map((b) => {
-                    return <li>{b.title}</li>;
+                    return (
+                        <Link key={`B_${b.id}`} to={`/blogs/${b.id}`}>
+                            {b.title}
+                        </Link>
+                    );
                 })}
             </ul>
         </div>

@@ -30,10 +30,14 @@ const Users = () => {
                         ? users.map((u) => {
                               return (
                                   <tr key={`D_${u.id}`}>
-                                      <Link to={`/users/${u.id}`}>
-                                          <td>{u.username}</td>
-                                      </Link>
-                                      <td>{u.blogs.length}</td>
+                                      <td>
+                                          <Link to={`/users/${u.id}`}>
+                                              <p>{u.username}</p>
+                                          </Link>
+                                      </td>
+                                      <td>
+                                          <p>{u.blogs.length}</p>
+                                      </td>
                                   </tr>
                               );
                           })
