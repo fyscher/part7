@@ -39,11 +39,11 @@ const AddBlog = () => {
             <h3>New Blog:</h3>
             <form onSubmit={handleAddBlog}>
                 <div>
-                    Title:{" "}
+                    Title:
                     <input value={newTitle} onChange={handleTitleChange} />
                 </div>
                 <div>
-                    Author:{" "}
+                    Author:
                     <input value={newAuthor} onChange={handleAuthorChange} />
                 </div>
                 <div>

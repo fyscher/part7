@@ -5,9 +5,8 @@ const commentsSlice = createSlice({
     name: "comments",
     initialState: [],
     reducers: {
-        updateComment(state, action) {
-            const id = action.payload.id;
-            return state.map((m) => (m.id !== id ? m : action.payload));
+        addComment(state, action) {
+            state.push(action.payload);
         },
         setComments(state, action) {
             return action.payload;
@@ -19,13 +18,19 @@ const commentsSlice = createSlice({
     },
 });
 
-export const { updateComment, setComments, removeComment } =
-    commentsSlice.actions;
+export const { addComment, setComments, removeComment } = commentsSlice.actions;
 
 export const initializeComments = (id) => {
     return async (dispatch) => {
         const comments = await blogService.getComments(id);
         dispatch(setComments(comments));
+    };
+};
+
+export const createComment = (id, newContent) => {
+    return async (dispatch) => {
+        const comment = await blogService.createComment(id, newContent);
+        dispatch(addComment(comment));
     };
 };
 

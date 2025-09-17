@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getUsers } from "../reducers/usersReducer";
 import { Link } from "react-router-dom";
+import Table from "react-bootstrap/Table";
 
 const Users = () => {
     const users = useSelector((state) => state.users);
@@ -14,15 +15,15 @@ const Users = () => {
     return (
         <div>
             <h2>Users</h2>
-            <table striped="true">
+            <Table striped="true" variant="dark">
                 <thead>
                     <tr>
-                        <td>
+                        <th>
                             <strong>Users</strong>
-                        </td>
-                        <td>
+                        </th>
+                        <th>
                             <strong>Blogs Created</strong>
-                        </td>
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -31,9 +32,9 @@ const Users = () => {
                               return (
                                   <tr key={`D_${u.id}`}>
                                       <td>
-                                          <Link to={`/users/${u.id}`}>
-                                              <p>{u.username}</p>
-                                          </Link>
+                                          <a href={`/users/${u.id}`}>
+                                              {u.username}
+                                          </a>
                                       </td>
                                       <td>
                                           <p>{u.blogs.length}</p>
@@ -43,7 +44,7 @@ const Users = () => {
                           })
                         : null}
                 </tbody>
-            </table>
+            </Table>
         </div>
     );
 };

@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import blogService from "../services/blogs";
+import { notify } from "../reducers/notificationReducer";
 
 const blogSlice = createSlice({
     name: "blogs",
@@ -25,13 +26,8 @@ const blogSlice = createSlice({
 export const { updateBlog, appendBlog, setBlogs, removeBlog } =
     blogSlice.actions;
 
-export const likeBlog = (id) => {
+export const likeBlog = (id, changedLike) => {
     return async (dispatch) => {
-        const object = await blogService.getById(id);
-        const changedLike = {
-            ...object,
-            likes: object.likes + 1,
-        };
         await blogService.update(id, changedLike);
         dispatch(updateBlog(changedLike));
     };
@@ -53,8 +49,14 @@ export const createBlog = (content) => {
 
 export const deleteBlog = (id) => {
     return async (dispatch) => {
-        await blogService.remove(id);
-        dispatch(removeBlog(id));
+        try {
+            await blogService.remove(id);
+            dispatch(removeBlog(id));
+            dispatch(notify("Blog Deleted!"));
+        } catch (err) {
+            console.log("deleteBlog: res: ", err);
+            dispatch(notify("Hey, that's not yours!"));
+        }
     };
 };
 

@@ -1,21 +1,16 @@
 import { deleteBlog } from "../reducers/blogReducer";
-import { useDispatch } from "react-redux";
-import { notify } from "../reducers/notificationReducer";
+import { useDispatch, useSelector } from "react-redux";
 
 const DelBlog = ({ id }) => {
     const dispatch = useDispatch();
-
+    const user = useSelector((state) => state.user);
     const handleDeleteBlog = async (e) => {
         e.preventDefault();
-        try {
-            console.log(id);
-            dispatch(deleteBlog(id));
-            dispatch(notify("Blog Deleted!"));
-        } catch (exception) {
-            console.log(exception);
-            dispatch(notify("Blog cannot be deleted!"));
-        }
+        dispatch(deleteBlog(id));
     };
+    if (!user) {
+        return null;
+    }
     return (
         <button type="button" onClick={handleDeleteBlog}>
             Delete

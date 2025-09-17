@@ -93,10 +93,11 @@ blogsRouter.post(
         });
         const savedComment = await comment.save();
         console.log("savedComment: ", savedComment);
+        console.log("comment: ", comment);
         blog.comments = blog.comments.concat(savedComment._id);
         await blog.save();
 
-        res.status(201).json(savedComment);
+        res.status(201).json(comment);
     },
 );
 
@@ -134,12 +135,16 @@ blogsRouter.put("/:id", middleware.userExtractor, async (request, response) => {
         author: 1,
         url: 1,
         likes: 1,
+        comments: 1,
     });
     const userJSON = user.toJSON();
     console.log("userJSON: ", userJSON);
     if (userJSON) {
         const updated = await Blog.findByIdAndUpdate(request.params.id, {
-            ...body,
+            title: body.title,
+            author: body.author,
+            url: body.url,
+            likes: body.likes,
         });
         response.status(204).json(updated);
     }

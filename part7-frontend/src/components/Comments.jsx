@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { initializeComments } from "../reducers/commentsReducer";
 import { useEffect } from "react";
+import ListGroup from "react-bootstrap/ListGroup";
 
 const Comments = ({ id }) => {
     const comments = useSelector((state) => state.comments);
@@ -13,11 +14,13 @@ const Comments = ({ id }) => {
     return (
         <div>
             <h4>Comments:</h4>
-            <ul>
+            <ListGroup>
                 {comments.map((c) => (
-                    <li key={`C_${c.id}`}>{c.content}</li>
+                    <ListGroup.Item key={`C_${c.id}`}>
+                        {c.content}
+                    </ListGroup.Item>
                 ))}
-            </ul>
+            </ListGroup>
         </div>
     );
 };
